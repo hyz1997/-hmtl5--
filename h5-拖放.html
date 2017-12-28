@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html,charset=utf-8">
+    <title></title>
+    <style type="text/css">
+        #drag-area{
+            width: 500px;height:500px;
+            border: 1px solid red;
+            position: relative;
+        }
+        #my-img{
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div id="drag-area">
+        <img src="https://upload-images.jianshu.io/upload_images/5349028-d0d998444892ee5c.jpg" alt="" id="my-img" width="100">
+    </div>
+</body>
+<script type="text/javascript">
+    var my_img=document.getElementById("my-img");
+    var drag_area=document.getElementById("drag-area");
+    my_img.ondragstart=function(evt){       //在被拖动的元素的dragstart事件中取得坐标便宜
+        var evt=evt || window.event;        //即代码中evt.clientX-this.offsetLeft和evt.clientY-this.offsetTop,并保存在dataTransfer对象中
+        evt.dataTransfer.setData("text",(evt.clientX-this.offsetLeft)+";"+(evt.clientY-this.offsetTop));
+    }
+    drag_area.ondragover=function(evt){     //阻止dragover的默认事件
+        var evt=evt || window.event;
+        if(typeof evt.preventDefault=="function"){
+            evt.preventDefault();
+        }else{
+            evt.returnValue=false;
+        }
+    }
+    drag_area.ondragenter=function(evt){   //阻止dragenter的默认事件
+        var evt=evt || window.event;
+        if(typeof evt.preventDefault=="function"){
+            evt.preventDefault();
+        }else{
+            evt.returnValue=false;
+        }
+    }
+    drag_area.ondrop=function(evt){
+        var evt=evt || window.event;
+        var drag_data=evt.dataTransfer.getData("Text").split(";");//从dataTransfer对象中取出数据，并将字符串分割成数组
+        var offset_x=drag_data[0],//取得横向偏移
+                offset_y=drag_data[1];//取得纵向偏移
+        if(typeof evt.preventDefault=="function"){ //阻止drop事件的默认行为
+            evt.preventDefault();
+        }else{
+            evt.returnValue=false;
+        }
+       my_img.style.left=(evt.clientX-offset_x)+"px";//给拖动元素的left，top赋值
+        my_img.style.top=(evt.clientY-offset_y)+"px";
+    }
+</script>
+</html>
